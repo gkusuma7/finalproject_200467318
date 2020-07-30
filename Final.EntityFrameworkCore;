@@ -1,0 +1,60 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+
+namespace FinalProject_200467318
+{
+
+    public class PeopleController : ControllerBase
+    {
+        [HttpGet("people/all")]
+        public ActionResult<IEnumerable<Person>> GetAll()
+        {
+            return new[]
+            {
+            new Person { Name = "Ana" },
+            new Person { Name = "Felipe" },
+            new Person { Name = "Emillia" }
+        };
+        }
+    }
+
+    public class ControllerBase
+    {
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+    }
+
+    public class PeopleApiController : ControllerBase
+    {
+        // Some code omitted for clarity
+
+        [HttpGet("people/{id}")]
+        public ActionResult<Person> Get(int id)
+        {
+            var person = db.People.Find(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            return person;
+        }
+
+        [HttpPost("people/create")]
+        public IActionResult Create(Person person)
+        {
+            db.Add(person);
+            db.SaveChanges();
+            return Accepted();
+        }
+    }
+
+
+}
